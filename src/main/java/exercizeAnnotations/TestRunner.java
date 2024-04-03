@@ -18,6 +18,9 @@ public class TestRunner {
     static int tests = 0;
     static int passed = 0;
 
+    static List<Method> listBeforeSuite = new ArrayList<>();
+    static List<Method> listAfterSuite = new ArrayList<>();
+
     public static void runTests(Class<?> testClass) throws InstantiationException,
                                                            IllegalAccessException {
 
@@ -27,6 +30,27 @@ public class TestRunner {
         // Creating a new Stream every foreach -> Supplier
         Supplier<Stream<Method>> streamSupplier = () -> Arrays.stream(testClass.getDeclaredMethods()) ;
 
+        // За один проход создаем два листа методов с @BeforeSuite &  @AfterSuite
+        streamSupplier.get()
+                .forEach(m -> {
+                    if (m.isAnnotationPresent(BeforeSuite.class)) {
+                        listBeforeSuite.add(m);
+                    } else if (m.isAnnotationPresent(AfterSuite.class))
+                        listAfterSuite.add(m);
+                });
+
+        // Validation count annotation @BeforeSuite & Run
+        if(listBeforeSuite.size() > 1){
+            throw new IllegalStateException("Methode with annotation @BeforeSuite more One");
+        } else {
+            try {
+                boolean resultTest = (boolean) listBeforeSuite.get(0).invoke(newInstance);
+                System.out.printf("Run methode: %s, Result: %s%n", listBeforeSuite.get(0).getName(), resultTest);
+                System.out.println("#----------------------------------------------#");
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         // Detect methode with annotation @BeforeTest
         Method beforeEveryTest = streamSupplier.get()
@@ -90,7 +114,18 @@ public class TestRunner {
                 }
             });
 
-
+        // Validation count annotation  @AfterSuite & Run
+        if(listAfterSuite.size() > 1){
+            throw new IllegalStateException("Methode with annotation @AfterSuite more One");
+        } else {
+            try {
+                boolean resultTest = (boolean) listAfterSuite.get(0).invoke(newInstance);
+                System.out.printf("Run methode: %s, Result: %s%n", listAfterSuite.get(0).getName(), resultTest);
+                System.out.println("#----------------------------------------------#");
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
     }
 }
