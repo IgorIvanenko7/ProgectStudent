@@ -128,6 +128,7 @@ public class TestRunner {
         }
 
         System.out.println("SOURCE");
+        System.out.println("COMMENT");
 
     }
 }
