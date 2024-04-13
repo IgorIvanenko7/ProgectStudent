@@ -22,8 +22,8 @@ public class Start {
         }
 
         System.out.println("### Before awaiting ###");
-        //---- ожидаем когда все потоки отработают --------
-        threadPool.awaitAllThreadsWaiting();
+        //---- ожидаем когда все потоки отработают и очередь будет пустая --------
+        threadPool.awaitTermination();
         System.out.println("### After awaiting ###");
 
         // ---- Перевод всех потоков в статус -> TERMINATED

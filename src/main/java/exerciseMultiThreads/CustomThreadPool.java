@@ -48,7 +48,7 @@ public class CustomThreadPool {
     }
 
     //Ожидание завершения пула потоков
-    public void awaitAllThreadsWaiting() throws InterruptedException {
+    public void awaitTermination() throws InterruptedException {
         while (true) {
             boolean isComplete = workerThreads.stream()
                     .map(th -> th.getState() == Thread.State.WAITING)
