@@ -24,7 +24,6 @@ public class UserDao {
     public boolean queryDML(SqlDdlEnum sqlEnum, Map<String, String> mapParameters) {
         return Optional.ofNullable(sqlEnum.getQuerySQL())
                 .map(sqlRun -> {
-                    // DML Actions
                     int countRow = namedJdbcTemplatePostgresSQL.update(sqlEnum.getQuerySQL(), mapParameters);
                     System.out.printf("### Action: %s | records: %s ###%n", sqlEnum.getNote(), countRow);
                     return true;
@@ -32,7 +31,6 @@ public class UserDao {
                 .orElse(false);
     }
 
-    // Дженерик для маппирования к любому типу(классу)
     public  <T> List<T> getRecords(Class<T> clazz, Map<String, String> mapParameters) {
         List<T> setRows = namedJdbcTemplatePostgresSQL
                 .query(SqlDdlEnum.selectRecords.getQuerySQL(),

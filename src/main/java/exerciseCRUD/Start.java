@@ -19,22 +19,18 @@ public class Start {
         //----------------------------------------------------------------
         System.out.println("### Begin ###");
 
-            // Добавление пользователя -> скалярное значение (одна запись)
+            userService.deleteAll();
+
             userService.createUser(NAME_USER);
 
-            // Добавление списка пользователей (> 1 записей)
             userService.createUser(LIST_USERS);
 
-            // Получить заданного пользователя(лей) по имени (любому вхождению)
             userService.getUsersPredicate("User3");
 
-            // Получить всех пользователей (RecordSet)
             userService.getAllUsers();
 
-            // Удаление заданного пользователя -> предикат по имени(любому вхождению)
             userService.deletePredicate("User2");
 
-            //Удаление всех записей
             userService.deleteAll();
 
         System.out.println("### End ###");
