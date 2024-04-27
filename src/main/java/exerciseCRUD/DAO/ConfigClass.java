@@ -33,7 +33,6 @@ public class ConfigClass {
         return new HikariDataSource(config);
     }
 
-    // @Qualifier -> позволит добавить коннекторы к другим БД
     @Bean
     public NamedParameterJdbcTemplate namedParameterJdbcTemplatePostgresSQL(@Qualifier("dataSourceDbPostgresSQL") DataSource dataSource) {
         NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
@@ -41,7 +40,6 @@ public class ConfigClass {
         return jdbcTemplate;
     }
 
-    // Bean маппера для возможности его дальнейшей кастомизации
     @Bean
     public ObjectMapper getConfigObjectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
