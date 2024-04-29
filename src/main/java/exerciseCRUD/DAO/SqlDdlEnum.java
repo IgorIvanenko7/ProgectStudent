@@ -7,11 +7,13 @@ import lombok.Getter;
 @Getter
 public enum SqlDdlEnum {
 
-    insertRecord ("insert into users(username) values(:nameUser)", "Insert record"),
-    selectRecords("select * from users " +
-                           "where username :: text ilike :nameUser","Get Records"),
-    deleteWithPredicate("delete from users " +
-                                 "where username :: text ilike :nameUser", "Delete with Predicate");
+    insertUser("insert into users(username) values(:nameUser)", "Insert user"),
+
+    selectUsers("select * from users " +
+                         "where username :: text ilike :nameUser","Get Records"),
+
+    deleteUsers("delete from users " +
+                         "where username :: text ilike :nameUser", "Delete users");
 
     // --- Define Constructor Variables ---
    private final String querySQL;
