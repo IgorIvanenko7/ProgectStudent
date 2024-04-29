@@ -33,7 +33,7 @@ public class UserDao {
 
     public  <T> List<T> getRecords(Class<T> clazz, Map<String, String> mapParameters) {
         List<T> setRows = namedJdbcTemplatePostgresSQL
-                .query(SqlDdlEnum.selectRecords.getQuerySQL(),
+                .query(SqlDdlEnum.selectUsers.getQuerySQL(),
                         mapParameters, new BeanPropertyRowMapper<>(clazz));
         return Optional.of(setRows)
                 .orElse(Collections.emptyList());

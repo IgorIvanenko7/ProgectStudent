@@ -3,7 +3,7 @@ package exerciseCRUD;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import exerciseCRUD.DAO.UserDao;
 import org.springframework.stereotype.Service;
-import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +25,7 @@ public class UserService {
     }
 
     public void deletePredicate(String subNane) {
-        userDao.queryDML(deleteWithPredicate,
+        userDao.queryDML(deleteUsers,
                 Map.of("nameUser", "%" + subNane + "%"));
     }
 
@@ -34,12 +34,12 @@ public class UserService {
         if (nameUser instanceof List) {
             resultInsert = ((List<?>) nameUser).stream()
                     .map(user -> (String) user)
-                    .map(rec -> userDao.queryDML(insertRecord,
+                    .map(rec -> userDao.queryDML(insertUser,
                             Map.of("nameUser", rec)))
                     .reduce(Boolean::logicalAnd)
                     .orElse(false);
         } else {
-             resultInsert =  userDao.queryDML(insertRecord,
+             resultInsert =  userDao.queryDML(insertUser,
                      Map.of("nameUser", (String) nameUser));
         }
         System.out.printf("### Status Insert record(s): %s ###%n ---------------------------%n", resultInsert);
@@ -52,9 +52,11 @@ public class UserService {
     public void getUsersPredicate (String subNane) {
         System.out.println("### Output Recordset Users ###");
         var userDaoList = userDao.getRecords(User.class,
-                new HashMap<>() {{put("nameUser", "%" + subNane + "%");}});
+                Map.of ("nameUser", "%" + subNane + "%"));
+
         userDaoList.forEach(rec ->
                 System.out.println(objectMapper.valueToTree(rec)));
         System.out.println("---------------------------------");
     }
+
 }
