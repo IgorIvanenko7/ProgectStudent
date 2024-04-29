@@ -1,0 +1,16 @@
+package exerciseEndpoints.dto;
+
+import lombok.Data;
+import org.springframework.stereotype.Repository;
+
+import java.math.BigDecimal;
+
+@Data
+@Repository
+public class ProductDto {
+
+    private Long id;
+    private Long numberCount;
+    private BigDecimal balans;
+    private UserProductType typeProduct;
+}
