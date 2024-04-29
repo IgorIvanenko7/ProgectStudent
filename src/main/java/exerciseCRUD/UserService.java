@@ -53,7 +53,6 @@ public class UserService {
         System.out.println("### Output Recordset Users ###");
         var userDaoList = userDao.getRecords(User.class,
                 Map.of ("nameUser", "%" + subNane + "%"));
-
         userDaoList.forEach(rec ->
                 System.out.println(objectMapper.valueToTree(rec)));
         System.out.println("---------------------------------");
