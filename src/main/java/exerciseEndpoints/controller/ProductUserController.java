@@ -34,10 +34,9 @@ public class ProductUserController {
 
     // Добавление пользователя и его продуктов
     @PostMapping("/addEntity")
-    public String saveProductForUserId(
+    public void saveProductForUserId(
             @RequestBody SaveEntityUserProducts requestEntity) {
         productService.saveProductForUserId(requestEntity);
-        return "Saved entity successfully";
     }
 
     // Удаление пользователя
