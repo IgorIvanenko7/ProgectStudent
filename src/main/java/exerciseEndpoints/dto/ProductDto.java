@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 
 @Data
-@Repository
 public class ProductDto {
 
     private Long id;
