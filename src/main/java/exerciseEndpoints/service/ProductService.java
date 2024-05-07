@@ -10,8 +10,6 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -22,12 +20,12 @@ import static exerciseCRUD.DAO.SqlDdlEnum.*;
 @Service
 public class ProductService {
 
-    private final NamedParameterJdbcTemplate namedJdbcTemplatePostgresSQL;
+    private final NamedParameterJdbcTemplate namedJdbcTemplateStudentPostgresSQL;
     private final UserDao userDao;
 
-    public ProductService (@Qualifier("namedParameterJdbcTemplatePostgresSQL")
-                    NamedParameterJdbcTemplate namedJdbcTemplate, UserDao userDao) {
-        this.namedJdbcTemplatePostgresSQL = namedJdbcTemplate;
+    public ProductService (@Qualifier("namedParameterJdbcTemplateStudentPostgresSQL") NamedParameterJdbcTemplate namedJdbcTemplateStudent,
+                           UserDao userDao) {
+        this.namedJdbcTemplateStudentPostgresSQL = namedJdbcTemplateStudent;
         this.userDao = userDao;
     }
 
@@ -69,7 +67,7 @@ public class ProductService {
 
     public  <T> List<T> getRecords(Class<T> clazz, Map<String, Object> mapParameters,
                                    SqlDdlEnum sqlDdlEnum) {
-        List<T> setRows = namedJdbcTemplatePostgresSQL
+        List<T> setRows = namedJdbcTemplateStudentPostgresSQL
                 .query(sqlDdlEnum.getQuerySQL(), mapParameters, new BeanPropertyRowMapper<>(clazz));
         return Optional.of(setRows)
                 .orElse(Collections.emptyList());

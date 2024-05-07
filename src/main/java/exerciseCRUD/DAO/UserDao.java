@@ -15,7 +15,7 @@ public class UserDao {
 
     public NamedParameterJdbcTemplate namedJdbcTemplatePostgresSQL;
 
-    public UserDao (@Qualifier("namedParameterJdbcTemplatePostgresSQL")
+    public UserDao (@Qualifier("namedParameterJdbcTemplateStudentPostgresSQL")
                        NamedParameterJdbcTemplate namedJdbcTemplate) {
         this.namedJdbcTemplatePostgresSQL = namedJdbcTemplate;
     }
