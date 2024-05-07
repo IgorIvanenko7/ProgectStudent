@@ -1,6 +1,7 @@
 package exerciseEndpoints.controller;
 
 import exerciseEndpoints.dto.ProductDto;
+import exerciseEndpoints.dto.RevisionContent;
 import exerciseEndpoints.dto.SaveEntityUserProducts;
 import exerciseEndpoints.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -34,15 +35,14 @@ public class ProductUserController {
 
     // Добавление пользователя и его продуктов
     @PostMapping("/addEntity")
-    public void saveProductForUserId(
+    public RevisionContent<SaveEntityUserProducts> saveProductForUserId(
             @RequestBody SaveEntityUserProducts requestEntity) {
-        productService.saveProductForUserId(requestEntity);
+        return productService.saveProductForUserId(requestEntity);
     }
 
     // Удаление пользователя
     @DeleteMapping("/deleteUser")
-    public String deleteUser(@RequestParam String username) {
+    public void deleteUser(@RequestParam String username) {
         productService.deleteUser(username);
-        return "Delete user(entity) successfully";
     }
 }

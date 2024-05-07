@@ -3,12 +3,15 @@ package exerciseEndpoints.service;
 import exerciseCRUD.DAO.SqlDdlEnum;
 import exerciseCRUD.DAO.UserDao;
 import exerciseEndpoints.dto.ProductDto;
+import exerciseEndpoints.dto.RevisionContent;
 import exerciseEndpoints.dto.SaveEntityUserProducts;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +47,7 @@ public class ProductService {
                 Map.of("idUser", idUser), selectProductsForUserId);
     }
 
-    public void saveProductForUserId(SaveEntityUserProducts saveEntity){
+    public RevisionContent<SaveEntityUserProducts> saveProductForUserId(SaveEntityUserProducts saveEntity){
         String currentUser = saveEntity.getUser().getUsername();
         // -- Save user
         userDao.queryDML(insertUser, Map.of("nameUser", currentUser));
@@ -56,6 +59,7 @@ public class ProductService {
                     "typeProduct", product.getTypeProduct().toString());
            userDao.queryDML(insertProductForCurrentUser, saveMap);
         });
+        return RevisionContent.of(java.lang.System.currentTimeMillis(), saveEntity);
     }
 
     public void deleteUser(String username) {
