@@ -1,6 +1,6 @@
 package exerciseCRUD;
 
-import exerciseCRUD.DAO.ConfigClass;
+import config.ConfigClass;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import java.util.List;
 

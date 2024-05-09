@@ -3,13 +3,15 @@ package exerciseEndpoints.service;
 import exerciseCRUD.DAO.SqlDdlEnum;
 import exerciseCRUD.DAO.UserDao;
 import exerciseEndpoints.dto.ProductDto;
-import exerciseEndpoints.dto.RevisionContent;
+import exerciseEndpoints.dto.RevisionResponse;
 import exerciseEndpoints.dto.SaveEntityUserProducts;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +24,7 @@ public class ProductService {
 
     private final NamedParameterJdbcTemplate namedJdbcTemplateStudentPostgresSQL;
     private final UserDao userDao;
+    private final static DateFormat DATE_FORMAT = new SimpleDateFormat("dd MMM yyyy HH:mm:ss:SSS Z");
 
     public ProductService (@Qualifier("namedParameterJdbcTemplateStudentPostgresSQL") NamedParameterJdbcTemplate namedJdbcTemplateStudent,
                            UserDao userDao) {
@@ -29,7 +32,7 @@ public class ProductService {
         this.userDao = userDao;
     }
 
-    public List<ProductDto> getProduct(Long idProduct) {
+    public RevisionResponse<List<ProductDto>> getProduct(Long idProduct) {
         List<ProductDto> productList = null;
         if (idProduct == null) {
             productList = getRecords(ProductDto.class, Collections.emptyMap(), selectProducts);
@@ -37,15 +40,16 @@ public class ProductService {
             productList = getRecords(ProductDto.class, Map.of("idProduct", idProduct), selectProduct);
         }
         System.out.printf("###%s###%n", productList);
-        return productList;
+        return RevisionResponse.of(DATE_FORMAT.format(System.currentTimeMillis()), productList);
     }
 
-    public List<ProductDto> getProductForUserId(Long idUser) {
-        return getRecords(ProductDto.class,
+    public RevisionResponse<List<ProductDto>> getProductForUserId(Long idUser) {
+        List<ProductDto> productList = getRecords(ProductDto.class,
                 Map.of("idUser", idUser), selectProductsForUserId);
+        return RevisionResponse.of(DATE_FORMAT.format(System.currentTimeMillis()), productList);
     }
 
-    public RevisionContent<SaveEntityUserProducts> saveProductForUserId(SaveEntityUserProducts saveEntity){
+    public RevisionResponse<SaveEntityUserProducts> saveProductForUserId(SaveEntityUserProducts saveEntity){
         String currentUser = saveEntity.getUser().getUsername();
         // -- Save user
         userDao.queryDML(insertUser, Map.of("nameUser", currentUser));
@@ -57,7 +61,7 @@ public class ProductService {
                     "typeProduct", product.getTypeProduct().toString());
            userDao.queryDML(insertProductForCurrentUser, saveMap);
         });
-        return RevisionContent.of(java.lang.System.currentTimeMillis(), saveEntity);
+        return RevisionResponse.of(DATE_FORMAT.format(System.currentTimeMillis()), saveEntity);
     }
 
     public void deleteUser(String username) {

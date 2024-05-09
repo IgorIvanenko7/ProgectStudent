@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"exerciseCRUD", "exerciseEndpoints"})
+@ComponentScan(basePackages = {"exerciseCRUD", "exerciseEndpoints", "config"})
 public class StartApp {
 
     public static void main(String[] args) {
