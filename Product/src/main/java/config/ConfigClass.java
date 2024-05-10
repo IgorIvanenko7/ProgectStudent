@@ -53,5 +53,4 @@ public class ConfigClass {
         objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
         return objectMapper;
     }
-
 }

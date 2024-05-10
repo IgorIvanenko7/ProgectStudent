@@ -1,5 +1,6 @@
 package exerciseEndpoints.service;
 
+import config.ConfigProperties;
 import exerciseCRUD.DAO.SqlDdlEnum;
 import exerciseCRUD.DAO.UserDao;
 import exerciseEndpoints.dto.ProductDto;
@@ -24,15 +25,22 @@ public class ProductService {
 
     private final NamedParameterJdbcTemplate namedJdbcTemplateStudentPostgresSQL;
     private final UserDao userDao;
+    private final ConfigProperties configProperties;
+
     private final static DateFormat DATE_FORMAT = new SimpleDateFormat("dd MMM yyyy HH:mm:ss:SSS Z");
 
     public ProductService (@Qualifier("namedParameterJdbcTemplateStudentPostgresSQL") NamedParameterJdbcTemplate namedJdbcTemplateStudent,
-                           UserDao userDao) {
+                           UserDao userDao, ConfigProperties configProperties) {
         this.namedJdbcTemplateStudentPostgresSQL = namedJdbcTemplateStudent;
         this.userDao = userDao;
+        this.configProperties = configProperties;
     }
 
     public RevisionResponse<List<ProductDto>> getProduct(Long idProduct) {
+        //-----------------
+        System.out.println(configProperties);
+
+
         List<ProductDto> productList = null;
         if (idProduct == null) {
             productList = getRecords(ProductDto.class, Collections.emptyMap(), selectProducts);
