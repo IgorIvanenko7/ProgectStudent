@@ -23,23 +23,20 @@ import javax.sql.DataSource;
 @ComponentScan(basePackages = {"exerciseCRUD"})
 public class ConfigClass {
 
-    @Autowired
-    private Environment environment;
-
-    final static int SIZE_POLL = 7;
+    private final ConfigProperties configProperties;
 
     @Bean
     public DataSource dataSourceDbStudentPostgresSQL() {
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl(environment.getRequiredProperty("spring.datasource.url"));
-        config.setUsername(environment.getRequiredProperty("spring.datasource.username"));
-        config.setPassword(environment.getRequiredProperty("spring.datasource.password"));
-        config.setMaximumPoolSize(SIZE_POLL);
+        config.setJdbcUrl(configProperties.getDatasource().getUrl());
+        config.setUsername(configProperties.getDatasource().getUsername());
+        config.setPassword(configProperties.getDatasource().getPassword());
+        config.setMaximumPoolSize(configProperties.getDatasource().getSize_pool());
         return new HikariDataSource(config);
     }
 
     @Bean
-    public NamedParameterJdbcTemplate namedParameterJdbcTemplateStudentPostgresSQL(@Qualifier("dataSourceDbStudentPostgresSQL") DataSource dataSource) {
+    public NamedParameterJdbcTemplate namedParameterJdbcTemplateStudentPostgresSQL(DataSource dataSource) {
         NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
         System.out.println("### Create NamedParameterJdbcTemplate for DB PostgresSQL(Student) ###");
         return jdbcTemplate;

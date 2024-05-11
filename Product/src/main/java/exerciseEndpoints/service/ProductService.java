@@ -1,12 +1,10 @@
 package exerciseEndpoints.service;
 
-import config.ConfigProperties;
 import exerciseCRUD.DAO.SqlDdlEnum;
 import exerciseCRUD.DAO.UserDao;
 import exerciseEndpoints.dto.ProductDto;
 import exerciseEndpoints.dto.RevisionResponse;
 import exerciseEndpoints.dto.SaveEntityUserProducts;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -25,22 +23,16 @@ public class ProductService {
 
     private final NamedParameterJdbcTemplate namedJdbcTemplateStudentPostgresSQL;
     private final UserDao userDao;
-    private final ConfigProperties configProperties;
 
     private final static DateFormat DATE_FORMAT = new SimpleDateFormat("dd MMM yyyy HH:mm:ss:SSS Z");
 
-    public ProductService (@Qualifier("namedParameterJdbcTemplateStudentPostgresSQL") NamedParameterJdbcTemplate namedJdbcTemplateStudent,
-                           UserDao userDao, ConfigProperties configProperties) {
+    public ProductService (NamedParameterJdbcTemplate namedJdbcTemplateStudent,
+                           UserDao userDao) {
         this.namedJdbcTemplateStudentPostgresSQL = namedJdbcTemplateStudent;
         this.userDao = userDao;
-        this.configProperties = configProperties;
     }
 
     public RevisionResponse<List<ProductDto>> getProduct(Long idProduct) {
-        //-----------------
-        System.out.println(configProperties);
-
-
         List<ProductDto> productList = null;
         if (idProduct == null) {
             productList = getRecords(ProductDto.class, Collections.emptyMap(), selectProducts);
