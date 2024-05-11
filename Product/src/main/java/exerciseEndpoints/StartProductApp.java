@@ -1,16 +1,16 @@
 package exerciseEndpoints;
 
-import config.ConfigProperties;
+import configPay.ConfigPropertiesProduct;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@EnableConfigurationProperties(ConfigProperties.class)
-@ComponentScan(basePackages = {"exerciseCRUD", "exerciseEndpoints", "config"})
-public class StartApp {
+@EnableConfigurationProperties({ConfigPropertiesProduct.class})
+@ComponentScan(basePackages = {"exerciseCRUD", "exerciseEndpoints", "configPay"})
+public class StartProductApp {
     public static void main(String[] args) {
-        SpringApplication.run(StartApp.class, args);
+        SpringApplication.run(StartProductApp.class, args);
     }
 }

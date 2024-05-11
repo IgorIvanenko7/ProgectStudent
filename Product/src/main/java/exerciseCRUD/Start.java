@@ -1,6 +1,6 @@
 package exerciseCRUD;
 
-import config.ConfigClass;
+import configPay.ConfigClass;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package config;
+package configPay;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -7,13 +7,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import javax.sql.DataSource;
@@ -23,7 +20,8 @@ import javax.sql.DataSource;
 @ComponentScan(basePackages = {"exerciseCRUD"})
 public class ConfigClass {
 
-    private final ConfigProperties configProperties;
+    //TODO инжект сразу в dataSourceDbStudentPostgresSQL!
+    private final ConfigPropertiesProduct configProperties;
 
     @Bean
     public DataSource dataSourceDbStudentPostgresSQL() {
