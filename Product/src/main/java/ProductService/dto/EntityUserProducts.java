@@ -1,4 +1,4 @@
-package exerciseEndpoints.dto;
+package ProductService.dto;
 
 import exerciseCRUD.User;
 import lombok.Data;
@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class SaveEntityUserProducts {
+public class EntityUserProducts {
     private User user;
     private List<ProductDto> listProducts;
 }

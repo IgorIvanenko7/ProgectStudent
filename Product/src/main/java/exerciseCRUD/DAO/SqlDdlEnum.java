@@ -28,10 +28,13 @@ public enum SqlDdlEnum {
     insertProductForCurrentUser("with getUser as (select id from users " +
                                          "where username = :nameUser) " +
                                          "insert into products values ((select id from getUser), :numberCount :: bigint , :balans :: numeric, :typeProduct :: user_product_type )",
-            "Save entity");
+            "Save entity"),
+
+    payProduct("update products " +
+                        "set balans = balans - (:divSum :: bigint) " +
+                        "where id :: int = :idUser and typeProduct :: text = :typeProduct ", "Pay product");
 
     // --- Define Constructor Variables ---
    private final String querySQL;
    private final String note;
 }
-

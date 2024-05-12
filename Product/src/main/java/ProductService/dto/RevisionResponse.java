@@ -1,4 +1,4 @@
-package exerciseEndpoints.dto;
+package ProductService.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

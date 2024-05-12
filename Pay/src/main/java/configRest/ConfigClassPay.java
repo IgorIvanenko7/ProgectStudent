@@ -27,13 +27,20 @@ public class ConfigClassPay {
     }
 
     @Bean
-    @Primary
     public RestTemplate restTemplateClient(ConfigPropertiesPay configProperties) {
         return new RestTemplateBuilder()
                 .rootUri(configProperties.getConf().getBaseurl())
                 .setConnectTimeout(configProperties.getConf().getConnectTimeout())
                 .setReadTimeout(configProperties.getConf().getReadTimeout())
-//                .errorHandler(errorHandler)
+                //.errorHandler(errorHandler)
+                .build();
+    }
+
+    @Bean
+    public RestTemplate restTemplateClientWthoutURL(ConfigPropertiesPay configProperties) {
+        return new RestTemplateBuilder()
+                .setConnectTimeout(configProperties.getConf().getConnectTimeout())
+                .setReadTimeout(configProperties.getConf().getReadTimeout())
                 .build();
     }
 }

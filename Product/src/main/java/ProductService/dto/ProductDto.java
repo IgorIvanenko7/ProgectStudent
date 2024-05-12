@@ -1,7 +1,6 @@
-package exerciseEndpoints.dto;
+package ProductService.dto;
 
 import lombok.Data;
-import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 

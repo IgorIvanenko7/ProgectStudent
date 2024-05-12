@@ -20,11 +20,8 @@ import javax.sql.DataSource;
 @ComponentScan(basePackages = {"exerciseCRUD"})
 public class ConfigClass {
 
-    //TODO инжект сразу в dataSourceDbStudentPostgresSQL!
-    private final ConfigPropertiesProduct configProperties;
-
     @Bean
-    public DataSource dataSourceDbStudentPostgresSQL() {
+    public DataSource dataSourceDbStudentPostgresSQL(ConfigPropertiesProduct configProperties) {
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(configProperties.getDatasource().getUrl());
         config.setUsername(configProperties.getDatasource().getUsername());
