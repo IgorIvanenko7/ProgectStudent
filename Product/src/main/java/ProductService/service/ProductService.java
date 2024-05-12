@@ -62,7 +62,7 @@ public class ProductService {
 
         if (countProduct.entrySet().stream()
                 .filter(val -> val.getValue() > 1)
-                .count() > 1){
+                .count() > 0){
             throw new HandlerExeptionProduct("Дублирование продуктов для пользователя :", currentUser);
         }
         // -- Save user
