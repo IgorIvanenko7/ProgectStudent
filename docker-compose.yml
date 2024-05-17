@@ -1,0 +1,9 @@
+version: "3.5"
+services:
+  sqlclub_db:
+      build: '.'
+      image: "sqlstudent_db_up"
+      ports:
+        - 8007:5432
+      volumes:
+        - c:/DB:/home
