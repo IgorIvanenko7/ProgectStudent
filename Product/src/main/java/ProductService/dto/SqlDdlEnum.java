@@ -16,18 +16,19 @@ public enum SqlDdlEnum {
                          "where username :: text ilike :nameUser", "Delete users"),
 
     selectProduct("select * from products " +
-                           "where id :: int = :idProduct", "Get products"),
+                           "where iduser :: int = :idProduct", "Get products"),
 
     selectProducts("select * from products", "Get products"),
 
     selectProductsForUserId("select * from products p " +
                                      "join users u " +
-                                     "using(id) " +
+                                     "on u.id = p.idUser " +
                                      "where u.id :: int = :idUser", "Get products"),
 
     insertProductForCurrentUser("with getUser as (select id from users " +
                                          "where username = :nameUser) " +
-                                         "insert into products values ((select id from getUser), :numberCount :: bigint , :balans :: numeric, :typeProduct :: user_product_type )",
+                                         "insert into products(idUser, numberCount, balans, typeProduct) " +
+                                         "values((select id from getUser), :numberCount :: bigint , :balans :: numeric, :typeProduct :: user_product_type)",
             "Save entity"),
 
     payProduct("update products " +

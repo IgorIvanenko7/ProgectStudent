@@ -1,7 +1,6 @@
 package ProductService.dto;
 
 
-import ProductService.repository.User;
 import lombok.Data;
 
 import java.util.List;
