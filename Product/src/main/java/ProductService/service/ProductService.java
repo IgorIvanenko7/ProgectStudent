@@ -2,17 +2,17 @@ package ProductService.service;
 
 import ProductService.config.CollectionModelMapper;
 import ProductService.dto.*;
-import ProductService.entity.NewTableEntity;
 import ProductService.entity.ProductEntity;
 import ProductService.entity.UserEntity;
 import ProductService.handleExeption.HandlerExeptionProduct;
-import ProductService.repo.NewTableRepo;
 import ProductService.repo.ProductRepo;
 import ProductService.repo.UserRepo;
 import ProductService.repository.DbOperations;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
@@ -31,14 +31,9 @@ import static ProductService.dto.SqlDdlEnum.*;
 public class ProductService {
 
     private final DbOperations dbOperations;
-
     private final ProductRepo productRepo;
     private final UserRepo userRepo;
-    private final NewTableRepo newTableRepo;
-
-
     private final CollectionModelMapper collectionModelMapper;
-
 
     private final static DateFormat DATE_FORMAT = new SimpleDateFormat("dd MMM yyyy HH:mm:ss:SSS Z");
 
@@ -108,7 +103,7 @@ public class ProductService {
 
     @Transactional
     public RevisionResponse<EntityUserProducts> saveProductForUserIdJPA(EntityUserProducts saveEntity) {
-        java.lang.String currentUser = saveEntity.getUser().getUsername();
+        String currentUser = saveEntity.getUser().getUsername();
 
         // -- Validate distinct product
         Map<UserProductType, Long> countProduct = saveEntity.getListProducts().stream()
@@ -121,32 +116,9 @@ public class ProductService {
             throw new HandlerExeptionProduct("Дублирование продуктов для пользователя :", currentUser);
         }
 
-        // -- Save user -> One Action
-//        UserEntity userEntity = new UserEntity();
-//        userEntity.setUsername(currentUser);
-//
-//        saveEntity.getListProducts().forEach(productDto -> {
-//            var prodEnt = collectionModelMapper.map(productDto, ProductEntity.class);
-//            prodEnt.setUser(userEntity);
-//            userEntity.getProductEntityList().add(prodEnt);
-//        });
-//        userRepo.save(userEntity);
-
-//      Long userId = userEntity.getId();
-//        saveEntity.getListProducts().forEach(product -> {
-//            new ProductEntity().
-//            product.setIdUser(userId)
-//        });
-
-       //--- V2. Создаем User -> save
-       // Далее ProductEntity в итерации set UserEntiTy ->
-       // Сохраняем  List<ProductEntity>
-       // Result: TWO Save Operation
-
         UserEntity userEntity = new UserEntity();
         userEntity.setUsername(currentUser);
         userRepo.save(userEntity);
-
         // -- Convert DTO to Entity & Save Products for current user
         List<ProductEntity> productEntityList = collectionModelMapper.mapAsList(
                 saveEntity.getListProducts(), ProductEntity.class);
@@ -155,9 +127,6 @@ public class ProductService {
 
         return RevisionResponse.of(DATE_FORMAT.format(System.currentTimeMillis()), saveEntity);
     }
-
-
-
 
     public RevisionResponse<List<ProductDto>> getProductForUserId(Long idUser) {
         List<ProductDto> productList = dbOperations.getRecords(ProductDto.class,
@@ -172,16 +141,19 @@ public class ProductService {
         return RevisionResponse.of(DATE_FORMAT.format(System.currentTimeMillis()), productList);
     }
 
-    public void deleteUser(java.lang.String username) {
+    public void deleteUser(String username) {
         dbOperations.queryDML(deleteUsers,
                 Map.of("nameUser", "%" + username + "%"));
     }
-    //----------------------------------------------------------
 
-    public void insertNewTable(List<NewTable> tableList) {
-        List<NewTableEntity> productList = collectionModelMapper.mapAsList(
-                tableList, NewTableEntity.class);
-        var responce = newTableRepo.saveAll(productList);
-        log.info("### SAve: {} ###", responce);
+    public ResponseEntity<User> deleteUserJPA(String username) {
+        if (userRepo.getUsers(username).isEmpty()) {
+            throw new HandlerExeptionProduct(
+                    "Пользователь :" + username," не найден");
+        }
+        var deleteUser = userRepo.deleteUser(username);
+        return Optional.of(collectionModelMapper.map(deleteUser, User.class))
+                .map(delU -> new ResponseEntity<>(delU, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 }
