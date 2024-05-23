@@ -4,7 +4,6 @@ import ProductService.dto.ProductDto;
 import ProductService.dto.RevisionResponse;
 import ProductService.dto.EntityUserProducts;
 import ProductService.dto.User;
-import ProductService.entity.UserEntity;
 import ProductService.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -58,11 +57,10 @@ public class ProductUserController {
        реализвана в Pay сервисе
      */
     @GetMapping("/runPayProduct")
-    public RevisionResponse<List<ProductDto>> payProductForUserId(
+    public RevisionResponse<List<ProductDto>> payProductForUserIdJPA(
             @RequestParam Long userId,
             @RequestParam String typeProduct,
             @RequestParam BigDecimal sumPay) {
-        return productService.payProduct(userId, typeProduct, sumPay);
+        return productService.payProductJPA(userId, typeProduct, sumPay);
     }
-
 }

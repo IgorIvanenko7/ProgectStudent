@@ -49,7 +49,6 @@ public class ProductService {
     }
 
     public RevisionResponse<List<ProductDto>> getProductJPA(Long idProduct) {
-
         List<ProductDto> productList;
         if (idProduct == null) {
             productList = collectionModelMapper.mapAsList(
@@ -62,16 +61,22 @@ public class ProductService {
         return RevisionResponse.of(DATE_FORMAT.format(System.currentTimeMillis()), productList);
     }
 
-    //-----------------------------------------------------------------------------------
-
     public RevisionResponse<List<ProductDto>> payProduct(Long userId, String typeProduct, BigDecimal sumPay) {
         //-- Update (pay)
         dbOperations.queryDML(payProduct,
                 Map.of( "idUser", userId,
-                        "typeProduct", typeProduct.toString(),
+                        "typeProduct", typeProduct,
                         "divSum", sumPay));
+
         // -- Get Update Product
         List<ProductDto> productList = dbOperations.getRecords(ProductDto.class, Map.of("idProduct", userId), selectProduct);
+        return RevisionResponse.of(DATE_FORMAT.format(System.currentTimeMillis()), productList);
+    }
+
+    public RevisionResponse<List<ProductDto>> payProductJPA(Long userId, String typeProduct, BigDecimal sumPay) {
+        var productEntityList = productRepo.payProduct(userId, typeProduct, sumPay);
+        List<ProductDto> productList = collectionModelMapper.mapAsList(
+                productEntityList, ProductDto.class);
         return RevisionResponse.of(DATE_FORMAT.format(System.currentTimeMillis()), productList);
     }
 
@@ -104,7 +109,6 @@ public class ProductService {
     @Transactional
     public RevisionResponse<EntityUserProducts> saveProductForUserIdJPA(EntityUserProducts saveEntity) {
         String currentUser = saveEntity.getUser().getUsername();
-
         // -- Validate distinct product
         Map<UserProductType, Long> countProduct = saveEntity.getListProducts().stream()
                 .map(ProductDto::getTypeProduct)
@@ -115,7 +119,6 @@ public class ProductService {
                 .count() > 0){
             throw new HandlerExeptionProduct("Дублирование продуктов для пользователя :", currentUser);
         }
-
         UserEntity userEntity = new UserEntity();
         userEntity.setUsername(currentUser);
         userRepo.save(userEntity);
@@ -134,6 +137,7 @@ public class ProductService {
         return RevisionResponse.of(DATE_FORMAT.format(System.currentTimeMillis()), productList);
     }
 
+    // Реализация через JPA Join
     public RevisionResponse<List<ProductDto>> getProductForUserIdJPA(Long idUser) {
         var productEntityList = userRepo.findUserId(idUser).getProductEntityList();
         List<ProductDto> productList = collectionModelMapper.mapAsList(

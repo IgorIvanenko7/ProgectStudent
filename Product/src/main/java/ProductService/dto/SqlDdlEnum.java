@@ -33,7 +33,7 @@ public enum SqlDdlEnum {
 
     payProduct("update products " +
                         "set balans = balans - (:divSum :: bigint) " +
-                        "where id :: int = :idUser and typeProduct :: text = :typeProduct ", "Pay product");
+                        "where iduser :: int = :idUser and typeProduct :: text = :typeProduct ", "Pay product");
 
     // --- Define Constructor Variables ---
    private final String querySQL;
