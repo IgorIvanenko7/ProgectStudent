@@ -3,7 +3,7 @@ package ProductService.controller;
 import ProductService.dto.ProductDto;
 import ProductService.dto.RevisionResponse;
 import ProductService.dto.EntityUserProducts;
-import ProductService.dto.UserProductType;
+import ProductService.dto.User;
 import ProductService.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,34 +22,34 @@ public class ProductUserController {
     @GetMapping("/productId/{productId}")
     public RevisionResponse<List<ProductDto>> getProductId(
             @PathVariable Long productId) {
-        return productService.getProduct(productId);
+        return productService.getProductJPA(productId);
     }
 
     // Получить все продукты
     @GetMapping("/productAll")
     public RevisionResponse<List<ProductDto>> getProductAll() {
-        return productService.getProduct(null);
+        return productService.getProductJPA(null);
     }
 
     // Получить продукты по userId
     @GetMapping("/productForUserId/{userId}")
     public RevisionResponse<List<ProductDto>> getProductForUserId(
             @PathVariable Long userId) {
-        return productService.getProductForUserId(userId);
+        return productService.getProductForUserIdJPA(userId);
     }
 
     // Добавление пользователя и его продуктов
     @PostMapping("/addEntity")
     public RevisionResponse<EntityUserProducts> saveProductForUserId(
             @RequestBody EntityUserProducts requestEntity) {
-        return productService.saveProductForUserId(requestEntity);
+        return productService.saveProductForUserIdJPA(requestEntity);
     }
 
     // Удаление пользователя
     @DeleteMapping("/deleteUser")
-    public ResponseEntity<Void> deleteUser(@RequestParam String username) {
-        productService.deleteUser(username);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<User> deleteUserJPA(
+            @RequestParam String username) {
+        return productService.deleteUserJPA(username);
     }
 
     /* Платеж по userId, typeProduct, на сумму sumPay
@@ -57,10 +57,10 @@ public class ProductUserController {
        реализвана в Pay сервисе
      */
     @GetMapping("/runPayProduct")
-    public RevisionResponse<List<ProductDto>> payProductForUserId(
+    public RevisionResponse<List<ProductDto>> payProductForUserIdJPA(
             @RequestParam Long userId,
-            @RequestParam UserProductType typeProduct,
+            @RequestParam String typeProduct,
             @RequestParam BigDecimal sumPay) {
-        return productService.payProduct(userId, typeProduct, sumPay);
+        return productService.payProductJPA(userId, typeProduct, sumPay);
     }
 }
