@@ -5,32 +5,30 @@ create table users (
    username varchar (255) not null unique
 );
 
---//-- Create product table
-drop table if exists products;
-create table products (
+--//-- Create payment table
+drop table if exists payments;
+create table payments (
    id serial primary key,
    idUser int not null references users on delete cascade,
-   numberCount bigint null,
-   balans numeric null,
-   typeProduct varchar (255) not null,
-   unique(id, typeProduct)
+   sumPay numeric null,
+   datePay timestamp
+);
+
+--//-- Create limit table
+drop table if exists limits;
+create table limits (
+   id serial primary key,
+   idUser int not null references users on delete cascade,
+   sumlimit numeric null,
+   dateinstall timestamp
 );
 
 --//-- insert example Data
 insert into users(username) values ('User1'), ('User2'), ('User3');
 
-insert into products(idUser, numberCount, balans, typeProduct)
-	values ((select id from users where username = 'User1'), 77755789878, 777.78, 'CARD');
-insert into products(idUser, numberCount, balans, typeProduct)
-	values((select id from users where username = 'User1'), 17755789878, 577.78, 'COUNT');
-
-insert into products(idUser, numberCount, balans, typeProduct)
-	values ((select id from users where username = 'User2'), 57755789878, 1777.78, 'CARD');
-insert into products(idUser, numberCount, balans, typeProduct)
-	values ((select id from users where username = 'User2'), 55755789878, 3577.78, 'COUNT');
-
-insert into products(idUser, numberCount, balans, typeProduct)
-	values ((select id from users where username = 'User3'), 87755789778, 5777.78, 'CARD');
-insert into products(idUser, numberCount, balans, typeProduct)
-	values ((select id from users where username = 'User3'), 58755789778, 7577.78, 'COUNT');
---//--------------------------------
+insert into limits(idUser, sumlimit, dateinstall)
+	values ((select id from users where username = 'User1'), 10000.00, current_timestamp);
+insert into limits(idUser, sumlimit, dateinstall)
+	values ((select id from users where username = 'User2'), 10000.00, current_timestamp);
+insert into limits(idUser, sumlimit, dateinstall)
+	values ((select id from users where username = 'User3'), 10000.00, current_timestamp);

@@ -21,7 +21,8 @@
 	<modules>
 		<module>Product</module>
         <module>Pay</module>
-    </modules>
+		<module>Limit</module>
+	</modules>
 
 	<properties>
 		<java.version>17</java.version>
