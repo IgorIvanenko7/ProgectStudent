@@ -65,7 +65,7 @@ public class LimitService {
 
         // Проверка наличия лимита для пользователя & инкремент лимита
         // insert with Predicate => если нет userId => добавить запись минус значение
-        var limitEntity = limitRepo.runLimit(userId, sumPay /*, revisionPay*/);
+        var limitEntity = limitRepo.runLimit(userId, sumPay , revisionPay);
 
 //        if (limitEntity == null) {
 //            throw new HandlerExeptionLimit(

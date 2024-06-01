@@ -11,7 +11,7 @@ public interface LimitRepo extends CrudRepository<LimitEntity, Long> {
 
 
       @Query(value = "WITH new_values(idUser, sumlimit, dateinstall) "
-                   + "   AS (values (:idUser, :sumPay, current_timestamp)), "
+                   + "   AS (values (:idUser, :sumPay, CAST(:revisionPay AS timestamp))), "
                    + "upsert AS (UPDATE limits l "
                    + "              SET sumlimit = (l.sumlimit - nv.sumlimit) "
                    + "              FROM new_values nv "
@@ -25,7 +25,7 @@ public interface LimitRepo extends CrudRepository<LimitEntity, Long> {
                    + "SELECT * FROM upsert"
                    + " union all "
                    + "SELECT * FROM insertt", nativeQuery = true)
-      LimitEntity runLimit(Long idUser, BigDecimal sumPay /*, Instant revisionPay*/);
+      LimitEntity runLimit(Long idUser, BigDecimal sumPay, Instant revisionPay);
 }
 
 
