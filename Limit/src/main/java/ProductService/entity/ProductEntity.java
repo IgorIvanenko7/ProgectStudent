@@ -18,7 +18,7 @@ public class ProductEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "iduser")
+    @JoinColumn(name = "iduser", referencedColumnName="id")
     private UserEntity user;
 
     @Column(name = "numbercount")

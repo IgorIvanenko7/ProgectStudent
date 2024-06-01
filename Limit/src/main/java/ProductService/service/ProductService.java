@@ -1,6 +1,6 @@
 package ProductService.service;
 
-import ProductService.config.CollectionModelMapper;
+import ProductService.Utils.CollectionModelMapper;
 import ProductService.dto.*;
 import ProductService.entity.ProductEntity;
 import ProductService.entity.UserEntity;
@@ -80,7 +80,7 @@ public class ProductService {
         return RevisionResponse.of(DATE_FORMAT.format(System.currentTimeMillis()), productList);
     }
 
-    public RevisionResponse<EntityUserProducts> saveProductForUserId(EntityUserProducts saveEntity) {
+    public RevisionResponse<UserProductsDto> saveProductForUserId(UserProductsDto saveEntity) {
         String currentUser = saveEntity.getUser().getUsername();
 
         // -- Validate distinct product
@@ -107,7 +107,7 @@ public class ProductService {
     }
 
     @Transactional
-    public RevisionResponse<EntityUserProducts> saveProductForUserIdJPA(EntityUserProducts saveEntity) {
+    public RevisionResponse<UserProductsDto> saveProductForUserIdJPA(UserProductsDto saveEntity) {
         String currentUser = saveEntity.getUser().getUsername();
         // -- Validate distinct product
         Map<UserProductType, Long> countProduct = saveEntity.getListProducts().stream()
@@ -122,6 +122,7 @@ public class ProductService {
         UserEntity userEntity = new UserEntity();
         userEntity.setUsername(currentUser);
         userRepo.save(userEntity);
+
         // -- Convert DTO to Entity & Save Products for current user
         List<ProductEntity> productEntityList = collectionModelMapper.mapAsList(
                 saveEntity.getListProducts(), ProductEntity.class);
@@ -138,25 +139,25 @@ public class ProductService {
     }
 
     // Реализация через JPA Join
-    public RevisionResponse<List<ProductDto>> getProductForUserIdJPA(Long idUser) {
-        var productEntityList = userRepo.findUserId(idUser).getProductEntityList();
-        List<ProductDto> productList = collectionModelMapper.mapAsList(
-                productEntityList, ProductDto.class);
-        return RevisionResponse.of(DATE_FORMAT.format(System.currentTimeMillis()), productList);
-    }
+//    public RevisionResponse<List<ProductDto>> getProductForUserIdJPA(Long idUser) {
+//        var productEntityList = userRepo.findUserId(idUser).getProductEntityList();
+//        List<ProductDto> productList = collectionModelMapper.mapAsList(
+//                productEntityList, ProductDto.class);
+//        return RevisionResponse.of(DATE_FORMAT.format(System.currentTimeMillis()), productList);
+//    }
 
     public void deleteUser(String username) {
         dbOperations.queryDML(deleteUsers,
                 Map.of("nameUser", "%" + username + "%"));
     }
 
-    public ResponseEntity<User> deleteUserJPA(String username) {
+    public ResponseEntity<UserDto> deleteUserJPA(String username) {
         if (userRepo.getUsers(username).isEmpty()) {
             throw new HandlerExeptionProduct(
                     "Пользователь :" + username," не найден");
         }
         var deleteUser = userRepo.deleteUser(username);
-        return Optional.of(collectionModelMapper.map(deleteUser, User.class))
+        return Optional.of(collectionModelMapper.map(deleteUser, UserDto.class))
                 .map(delU -> new ResponseEntity<>(delU, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }

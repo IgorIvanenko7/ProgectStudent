@@ -20,5 +20,8 @@ public class UserEntity {
     private String username;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    private List<ProductEntity> productEntityList = new ArrayList<>();
+    private List<PaymentEntity> paymentEntityList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private List<LimitEntity> limitEntityList = new ArrayList<>();
 }

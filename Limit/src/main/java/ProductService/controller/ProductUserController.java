@@ -2,8 +2,8 @@ package ProductService.controller;
 
 import ProductService.dto.ProductDto;
 import ProductService.dto.RevisionResponse;
-import ProductService.dto.EntityUserProducts;
-import ProductService.dto.User;
+import ProductService.dto.UserProductsDto;
+import ProductService.dto.UserDto;
 import ProductService.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -32,22 +32,22 @@ public class ProductUserController {
     }
 
     // Получить продукты по userId
-    @GetMapping("/productForUserId/{userId}")
-    public RevisionResponse<List<ProductDto>> getProductForUserId(
-            @PathVariable Long userId) {
-        return productService.getProductForUserIdJPA(userId);
-    }
+//    @GetMapping("/productForUserId/{userId}")
+//    public RevisionResponse<List<ProductDto>> getProductForUserId(
+//            @PathVariable Long userId) {
+//        return productService.getProductForUserIdJPA(userId);
+//    }
 
     // Добавление пользователя и его продуктов
     @PostMapping("/addEntity")
-    public RevisionResponse<EntityUserProducts> saveProductForUserId(
-            @RequestBody EntityUserProducts requestEntity) {
+    public RevisionResponse<UserProductsDto> saveProductForUserId(
+            @RequestBody UserProductsDto requestEntity) {
         return productService.saveProductForUserIdJPA(requestEntity);
     }
 
     // Удаление пользователя
     @DeleteMapping("/deleteUser")
-    public ResponseEntity<User> deleteUserJPA(
+    public ResponseEntity<UserDto> deleteUserJPA(
             @RequestParam String username) {
         return productService.deleteUserJPA(username);
     }

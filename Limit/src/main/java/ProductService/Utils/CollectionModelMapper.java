@@ -1,4 +1,4 @@
-package ProductService.config;
+package ProductService.Utils;
 
 import lombok.NonNull;
 import org.springframework.stereotype.Component;

@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class EntityUserProducts {
-    private User user;
+public class UserProductsDto {
+    private UserDto user;
     private List<ProductDto> listProducts;
 }

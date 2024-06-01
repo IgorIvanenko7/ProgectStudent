@@ -2,13 +2,14 @@ package ProductService.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+
 import java.math.BigDecimal;
 import java.time.Instant;
 
 @Data
 @Entity
-@Table(name = "payments")
-public class PaymentEntity {
+@Table(name = "limits")
+public class LimitEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,14 +17,14 @@ public class PaymentEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "iduser")
+    @JoinColumn(name = "iduser", referencedColumnName="id")
     private UserEntity user;
 
-    @Column(name = "sumpay")
-    private BigDecimal sumPay;
+    @Column(name = "sumlimit")
+    private BigDecimal sumLimit;
 
-    @Column(name = "datepay")
-    private Instant datePay;
+    @Column(name = "dateinstall")
+    private Instant dateInstall;
 }
 
 

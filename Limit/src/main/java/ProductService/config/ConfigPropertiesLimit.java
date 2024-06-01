@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Data
 @RequiredArgsConstructor
 @ConfigurationProperties(prefix = "spring")
-public class ConfigPropertiesProduct {
+public class ConfigPropertiesLimit {
 
     private DbProperties datasource;
 
