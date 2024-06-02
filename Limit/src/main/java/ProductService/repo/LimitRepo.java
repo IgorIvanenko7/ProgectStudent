@@ -6,6 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
 
 public interface LimitRepo extends CrudRepository<LimitEntity, Long> {
 
@@ -36,12 +37,19 @@ public interface LimitRepo extends CrudRepository<LimitEntity, Long> {
                    + "WHERE l.idUser = :idUser", nativeQuery = true)
       LimitEntity findLimitForUser(Long idUser);
 
+      //Обновление базового лимита (по запросу)
       @Query(value = "UPDATE limits "
                    + "SET dateinstall = CAST(:dateInstallLimit AS timestamp), "
                    + "    sumBaselimit = :newBaseLimit "
                    + "WHERE idUser = :idUser "
                    + "RETURNING *", nativeQuery = true)
-      LimitEntity updateLimit(Long idUser, BigDecimal newBaseLimit, Instant dateInstallLimit);
+      LimitEntity updateBaseLimit(Long idUser, BigDecimal newBaseLimit, Instant dateInstallLimit);
+
+      //Ежедневное обновление дневного лимита по шедуллеру
+      @Query(value = "UPDATE limits "
+                   + "SET sumDaylimit = sumBaselimit "
+                   + "RETURNING *", nativeQuery = true)
+      List<LimitEntity> updateDayLimit();
 }
 
 

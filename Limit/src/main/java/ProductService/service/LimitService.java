@@ -51,7 +51,7 @@ public class LimitService {
                                 "Изменение бащового лимта отменено, пользователь ID:" + userId,
                                 "; текущий базовый лимит изменен(создан) < 2 мес. назад");
                     }
-                    return limitRepo.updateLimit(userId, sumNewBaseLimit, dateInstallLimit);
+                    return limitRepo.updateBaseLimit(userId, sumNewBaseLimit, dateInstallLimit);
                 })
                 .orElseThrow(() -> new HandlerExeptionLimit(
                         "Лимит пользователь c ID:" + userId," не найден"));
