@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,7 +26,6 @@ public class LimitController {
      * В случае превышения установленного лимита -> откат транзакционного блока
      * Каждая операции платежа(списания) сохраняется в сущностях с уникальным timestamp
      * Получение уникального timestamp реализована в классе -> DateTimeUtils.uniqueTimestampMicros(),
-     * уникальность обеспечена в т.ч. в многопоточности
      */
     @GetMapping("/runPayment")
     public RevisionResponseLimit<PaymentResponseDto> paymentLimit(
@@ -33,4 +33,13 @@ public class LimitController {
             @RequestParam BigDecimal sumPay) {
         return limitService.runPayment(userId, sumPay);
     }
+    //-------------------------------------------------------------------------
+
+    // Получить все платежи по userId
+    @GetMapping("/paymentsForUserId/{userId}")
+    public RevisionResponseLimit<List<PaymentDto>> getProductForUserId(
+            @PathVariable Long userId) {
+        return limitService.getPaymensForUserId(userId);
+    }
+
 }

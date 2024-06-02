@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.*;
+import java.util.List;
 import java.util.Optional;
 
 @Log4j2
@@ -103,4 +104,14 @@ public class LimitService {
         return RevisionResponseLimit.of(revisionPay,
                 PaymentResponseDto.createPaymentResponseDto(paymentDto, limitDto));
     }
+
+    // Реализация через JPA Join
+    public RevisionResponseLimit<List<PaymentDto>> getPaymensForUserId(Long idUser) {
+        var paymentEntityList = userRepo.findUserId(idUser).getPaymentEntityList();
+        List<PaymentDto> paymentDtoList = collectionModelMapper.mapAsList(
+                paymentEntityList, PaymentDto.class);
+        return RevisionResponseLimit.of(DateTimeUtils.uniqueTimestampMicros(), paymentDtoList);
+    }
+
+
 }
