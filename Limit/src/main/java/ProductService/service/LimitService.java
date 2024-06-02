@@ -32,7 +32,7 @@ public class LimitService {
     private final LimitRepo limitRepo;
     private final CollectionModelMapper collectionModelMapper;
 
-    public RevisionResponseLimit<LimitDto> changeLimitUser(Long userId, BigDecimal sumLimit) {
+    public RevisionResponseLimit<LimitDto> changeLimitUser(Long userId, BigDecimal sumNewBaseLimit) {
 
          Instant dateInstallLimit = DateTimeUtils.uniqueTimestampMicros();
          var limitEntityResp = Optional.ofNullable(limitRepo.findLimitForUser(userId))
@@ -46,12 +46,12 @@ public class LimitService {
                     ZonedDateTime  dateTimeNow  = Instant.now().atZone(ZoneId.systemDefault());
                     int monthsDiff = Period.between(dateTimeCurrentLimit.toLocalDate(), dateTimeNow.toLocalDate()).getMonths();
 
-                    if (monthsDiff > 2) {
+                    if (monthsDiff < 2) {
                         throw new HandlerExeptionLimit(
-                                "Изменение лимта отменено, пользователь ID:" + userId,
-                                "; текущий лимит изменен (создан) < 2 мес. назад");
+                                "Изменение бащового лимта отменено, пользователь ID:" + userId,
+                                "; текущий базовый лимит изменен(создан) < 2 мес. назад");
                     }
-                    return limitRepo.updateLimit(userId, sumLimit, dateInstallLimit);
+                    return limitRepo.updateLimit(userId, sumNewBaseLimit, dateInstallLimit);
                 })
                 .orElseThrow(() -> new HandlerExeptionLimit(
                         "Лимит пользователь c ID:" + userId," не найден"));
@@ -71,12 +71,14 @@ public class LimitService {
         Instant revisionPay = DateTimeUtils.uniqueTimestampMicros();
         PaymentDto paymentDto  = PaymentDto.createNewPayment(
                 userId, sumPay, revisionPay);
+
         var paymentEntity = Optional.ofNullable(collectionModelMapper.map(paymentDto, PaymentEntity.class))
                 .map(paymentEnt ->{
                     log.info("Convert PayDto to Entity: {}", paymentEnt);
                     return paymentEnt;})
                 .orElseThrow(() -> new HandlerExeptionLimit(
                         "Ошибка Маппирования в PaymentEntity, ID пользователя:", userId.toString()));
+
         var paySaveEntity = paymentRepo.save(paymentEntity);
         paymentDto = collectionModelMapper.map(paySaveEntity, PaymentDto.class);
 
@@ -84,15 +86,15 @@ public class LimitService {
          * В случае отсутствия лимита -> создание лимита = 10000.00 "минус" сумма текущего платежа
          */
         var limitEntity = limitRepo.runLimit(userId, sumPay , revisionPay);
-        limitEntity.setSumLimit(limitEntity.getSumLimit().subtract(sumPay));
+        limitEntity.setSumDaylimit(limitEntity.getSumDaylimit().subtract(sumPay));
 
         var limitDto = Optional.ofNullable(collectionModelMapper.map(limitEntity, LimitDto.class))
                 .map(limitDtoo -> {
-                    if (limitDtoo.getSumLimit().compareTo(BigDecimal.ZERO) < 0){
-                        log.info("Выход за дневной лимит:{}", limitDtoo.getSumLimit());
+                    if (limitDtoo.getSumDaylimit().compareTo(BigDecimal.ZERO) < 0){
+                        log.info("Выход за дневной лимит:{}", limitDtoo.getSumDaylimit());
                         throw new HandlerExeptionLimit(
                                 "Проведение платежа отменено, пользователь ID:" + userId,
-                                "; выход за лимит:" + limitDtoo.getSumLimit());
+                                "; выход за лимит:" + limitDtoo.getSumDaylimit());
                     }
                     return limitDtoo;})
                 .orElseThrow(() -> new HandlerExeptionLimit(

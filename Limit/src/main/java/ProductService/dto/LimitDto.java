@@ -10,6 +10,7 @@ public class LimitDto {
 
     private Long id;
     private Long idUser;
-    private BigDecimal sumLimit;
+    private BigDecimal sumDaylimit;
     private Instant dateInstall;
+    private BigDecimal sumBaselimit;
 }

@@ -20,11 +20,14 @@ public class LimitEntity {
     @JoinColumn(name = "iduser", referencedColumnName="id")
     private UserEntity user;
 
-    @Column(name = "sumlimit")
-    private BigDecimal sumLimit;
+    @Column(name = "sumdaylimit")
+    private BigDecimal sumDaylimit;
 
     @Column(name = "dateinstall")
     private Instant dateInstall;
+
+    @Column(name = "sumbaselimit")
+    private BigDecimal sumBaselimit;
 }
 
 

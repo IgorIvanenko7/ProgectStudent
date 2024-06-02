@@ -13,12 +13,12 @@ public class LimitController {
 
     private final LimitService limitService;
 
-    // Изменение лимита пользователя(клиента), не чаше 1 раза в 2 мес.
+    // Изменение Базового лимита пользователя(клиента), не чаше 1 раза в 2 мес.
     @PutMapping("/changeLimit")
     public RevisionResponseLimit<LimitDto> changeLimitUser(
             @RequestParam Long userId,
-            @RequestParam BigDecimal sumLimit) {
-        return limitService.changeLimitUser(userId, sumLimit);
+            @RequestParam BigDecimal sumNewBaseLimit) {
+        return limitService.changeLimitUser(userId, sumNewBaseLimit);
     }
 
     /* Проведение платежа по userId, на сумму sumPay
@@ -28,7 +28,7 @@ public class LimitController {
      * уникальность обеспечена в т.ч. в многопоточности
      */
     @GetMapping("/runPayment")
-    public RevisionResponseLimit<PaymentResponseDto> paymentLimitJPA(
+    public RevisionResponseLimit<PaymentResponseDto> paymentLimit(
             @RequestParam Long userId,
             @RequestParam BigDecimal sumPay) {
         return limitService.runPayment(userId, sumPay);
