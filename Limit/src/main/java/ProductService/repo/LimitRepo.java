@@ -12,7 +12,7 @@ public interface LimitRepo extends CrudRepository<LimitEntity, Long> {
 
       /* Создание, уменьшения и контроля лимитов, реализовано в одном запросе с помощью табличных обобщений (CTE)
        * Если в сущности(таблице) Лимитов нет соответствующего пользователя(клиента) -> запрос создаст новый дефолтный
-       * базовый лимит (10 000.00), за минусом текущего платежа.
+       * базовый лимит (10 000.00).
        * Иначе возьмет текущий лимит по заданному пользователю(клиенту) и понизит на сумму платежа
        */
       @Query(value = "WITH new_values(idUser, sumPay, dateinstall) "
@@ -23,7 +23,7 @@ public interface LimitRepo extends CrudRepository<LimitEntity, Long> {
                    + "              WHERE l.idUser = nv.idUser "
                    + "              RETURNING l.id, l.idUser, l.sumDaylimit, l.dateinstall, l.sumBaselimit), "
                    + "insertt as (INSERT INTO limits(idUser, sumDaylimit, dateinstall, sumBaselimit) "
-                   + "              SELECT idUser, (10000.00 - sumPay), dateinstall, 10000.00"
+                   + "              SELECT idUser, 10000.00, dateinstall, 10000.00"
                    + "              FROM new_values "
                    + "              WHERE NOT EXISTS (SELECT 1 FROM upsert) "
                    + "              RETURNING *) "

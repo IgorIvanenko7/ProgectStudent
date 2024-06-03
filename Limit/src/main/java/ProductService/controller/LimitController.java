@@ -3,6 +3,7 @@ package ProductService.controller;
 import ProductService.dto.*;
 import ProductService.service.LimitService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -42,4 +43,16 @@ public class LimitController {
         return limitService.getPaymensForUserId(userId);
     }
 
+    // Удалить пользователя
+    @DeleteMapping("/deleteUser")
+    public ResponseEntity<UserDto> deleteUser(
+            @RequestParam Long userId) {
+        return limitService.deleteUser(userId);
+    }
+
+    // Получить всех пользователей
+    @GetMapping("/getAllUsers")
+    public RevisionResponseLimit<List<UserDto>> getAllUsers() {
+        return limitService.getAllUsers();
+    }
 }

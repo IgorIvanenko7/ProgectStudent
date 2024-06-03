@@ -46,11 +46,11 @@ public class ProductUserController {
     }
 
     // Удаление пользователя
-    @DeleteMapping("/deleteUser")
-    public ResponseEntity<UserDto> deleteUserJPA(
-            @RequestParam String username) {
-        return productService.deleteUserJPA(username);
-    }
+//    @DeleteMapping("/deleteUser")
+//    public ResponseEntity<UserDto> deleteUserJPA(
+//            @RequestParam String username) {
+//        return productService.deleteUserJPA(username);
+//    }
 
     /* Платеж по userId, typeProduct, на сумму sumPay
        Вызывается ендпоинтом (/runPay) из Pay сервиса. Вся валидация

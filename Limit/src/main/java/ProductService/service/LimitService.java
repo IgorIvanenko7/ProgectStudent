@@ -7,12 +7,12 @@ import ProductService.entity.PaymentEntity;
 import ProductService.handleExeption.HandlerExeptionLimit;
 import ProductService.repo.LimitRepo;
 import ProductService.repo.PaymentRepo;
-import ProductService.repo.ProductRepo;
 import ProductService.repo.UserRepo;
-import ProductService.repository.DbOperations;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
@@ -26,8 +26,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class LimitService {
 
-    private final DbOperations dbOperations;
-    private final ProductRepo productRepo;
     private final UserRepo userRepo;
     private final PaymentRepo paymentRepo;
     private final LimitRepo limitRepo;
@@ -113,5 +111,21 @@ public class LimitService {
         return RevisionResponseLimit.of(DateTimeUtils.uniqueTimestampMicros(), paymentDtoList);
     }
 
+    public ResponseEntity<UserDto> deleteUser(Long idUser) {
+        if (userRepo.findUserId(idUser) == null) {
+            throw new HandlerExeptionLimit(
+                    "Пользователь c ID:" + idUser," не найден");
+        }
+        var deleteUser = userRepo.deleteUserId(idUser);
+        return Optional.of(collectionModelMapper.map(deleteUser, UserDto.class))
+                .map(delU -> new ResponseEntity<>(delU, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
+    }
+
+    public RevisionResponseLimit<List<UserDto>> getAllUsers() {
+       var userEntityList = userRepo.findAll();
+       return RevisionResponseLimit.of(DateTimeUtils.uniqueTimestampMicros(),
+               collectionModelMapper.mapAsList(userEntityList, UserDto.class));
+    }
 
 }

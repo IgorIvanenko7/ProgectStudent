@@ -20,4 +20,9 @@ public interface UserRepo extends CrudRepository<UserEntity, Long> {
                    + "where username = :nameUser "
                    + "returning id, username", nativeQuery = true)
       UserEntity deleteUser(String nameUser);
+
+      @Query(value = "delete from users "
+                   + "where id = :idUser "
+                   + "returning id, username", nativeQuery = true)
+      UserEntity deleteUserId(Long idUser);
 }
