@@ -47,7 +47,7 @@ public class LimitService {
 
                     if (monthsDiff < 2) {
                         throw new HandlerExeptionLimit(
-                                "Изменение бащового лимта отменено, пользователь ID:" + userId,
+                                "Изменение базового лимита отменено, пользователь ID:" + userId,
                                 "; текущий базовый лимит изменен(создан) < 2 мес. назад");
                     }
                     return limitRepo.updateBaseLimit(userId, sumNewBaseLimit, dateInstallLimit);
@@ -62,7 +62,6 @@ public class LimitService {
     @Transactional
     public RevisionResponseLimit<PaymentResponseDto> runPayment(Long userId, BigDecimal sumPay) {
 
-        // Validate exists user on ID
         if (userRepo.findUserId(userId) == null) {
             throw new HandlerExeptionLimit(
                     "Пользователь c ID:" + userId," не найден, платеж не выполнен");
@@ -77,7 +76,7 @@ public class LimitService {
                     return paymentEnt;})
                 .orElseThrow(() -> new HandlerExeptionLimit(
                         "Ошибка Маппирования в PaymentEntity, ID пользователя:", userId.toString()));
-
+        // Создание платежа
         var paySaveEntity = paymentRepo.save(paymentEntity);
         paymentDto = collectionModelMapper.map(paySaveEntity, PaymentDto.class);
 
@@ -92,7 +91,7 @@ public class LimitService {
                     if (limitDtoo.getSumDaylimit().compareTo(BigDecimal.ZERO) < 0){
                         log.info("Выход за дневной лимит:{}", limitDtoo.getSumDaylimit());
                         throw new HandlerExeptionLimit(
-                                "Проведение платежа отменено, пользователь ID:" + userId,
+                                "Проведение платежа отменено (откат транзакции включая платеж), пользователь ID:" + userId,
                                 "; выход за лимит:" + limitDtoo.getSumDaylimit());
                     }
                     return limitDtoo;})
